@@ -1,0 +1,13 @@
+# virtual environments
+.venv/
+venv/
+
+# python
+__pycache__/
+*.py[cod]
+
+# session tokens written by GetTokens.py / read by NScript.py - never commit these
+token.txt
+
+# local scratch
+New Text Document.txt
