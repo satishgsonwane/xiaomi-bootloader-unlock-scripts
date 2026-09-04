@@ -14,8 +14,9 @@ themselves were written by the people listed under **Credits**.
 | `Method 1/Avoid quota limit reached/` | Windows kit: `GetTokens.py` (grabs session tokens from Firefox/Chrome) + `NScript.py` (four timed request windows) |
 | `Method 1/GetTokens for Gnome on Linux by Jenna-66/` | Same kit adapted for GNOME on Linux |
 | `Method 1/Ping/Ping.bat` | Checks that the NTP and Mi API hosts are reachable |
-| `Method 2/` | `hyperosunlocker.py`: single-window script, token pasted by hand |
-| `Method 2 - Instructions.md` | Step-by-step setup and run guide for Method 2, with a Python venv |
+| `Method 2/hyperosunlocker.py` | Original single-window script, token pasted by hand |
+| `Method 2/hyperosunlocker_multi.py` | Multi-worker version of the above: staggered lead times, warm connections, nearby NTP, request cap, rehearsal mode |
+| `Method 2/Method 2 - Instructions.md` | Step-by-step setup and run guide for Method 2, with a Python venv |
 
 ## Requirements
 
@@ -39,16 +40,24 @@ themselves were written by the people listed under **Credits**.
 
 ## Method 2 (one window, manual token)
 
-See [`Method 2 - Instructions.md`](Method%202%20-%20Instructions.md) for the
-full walkthrough. Short version:
+See [`Method 2/Method 2 - Instructions.md`](Method%202/Method%202%20-%20Instructions.md)
+for the full walkthrough. Short version:
 
 ```bash
 cd "Method 2"
 python -m venv .venv
 .venv\Scripts\activate.bat        # Windows cmd
 pip install -r requirements.txt
-python hyperosunlocker.py           # paste new_bbs_serviceToken when asked
+python hyperosunlocker_multi.py --test-in-s 40   # rehearsal, nothing is sent
+python hyperosunlocker_multi.py                  # real run, paste the token
+python hyperosunlocker.py                        # or the original single-worker script
 ```
+
+`hyperosunlocker_multi.py` is a rework of the original that runs several workers
+in one window at staggered lead times (default 400/250/150/50 ms), keeps the
+TLS connections warm during the wait, picks the lowest-latency NTP server and
+re-syncs before midnight, ignores a "quota reached" reply to a request that was
+sent too early, and stops on its own after a per-worker cap.
 
 ## After the script runs (do this no matter what it printed)
 

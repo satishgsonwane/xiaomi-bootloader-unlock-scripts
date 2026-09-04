@@ -11,3 +11,6 @@ token.txt
 
 # local scratch
 New Text Document.txt
+
+# run logs
+*.log
